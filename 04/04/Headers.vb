@@ -31,15 +31,13 @@ Public Class IMAGE_OPTIONAL_HEADER32
     Public SizeOfStackReserve, SizeOfStackCommit,
            SizeOfHeapReserve, SizeOfHeapCommit,
            LoaderFlags, NumberOfRvaAndSizes As Integer
-    Public DataDirectory As IMAGE_DATA_DIRECTORY() = New IMAGE_DATA_DIRECTORY() {
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY,
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY,
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY,
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY,
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY,
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY,
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY,
-        New IMAGE_DATA_DIRECTORY, New IMAGE_DATA_DIRECTORY}
+    Public DataDirectory(15) As IMAGE_DATA_DIRECTORY
+
+    Public Sub New()
+        For i = 0 To DataDirectory.Length - 1
+            DataDirectory(i) = New IMAGE_DATA_DIRECTORY
+        Next
+    End Sub
 End Class
 
 Public Class IMAGE_DATA_DIRECTORY
