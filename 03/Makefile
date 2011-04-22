@@ -1,4 +1,4 @@
-TARGET   = makeexe1.exe makeexe2.exe
+TARGET   = makeexe1.exe makeexe2.exe makeexe3.exe
 CXX      = g++
 CXXFLAGS = -std=c++0x
 
@@ -8,6 +8,9 @@ makeexe1.exe: makeexe1.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 makeexe2.exe: makeexe2.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $<
+
+makeexe3.exe: makeexe3.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 clean:
