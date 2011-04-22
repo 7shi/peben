@@ -5,6 +5,12 @@
     Public e_lfanew%
 End Class
 
+Public Class IMAGE_NT_HEADERS32
+    Public Signature%
+    Public FileHeader As New IMAGE_FILE_HEADER
+    Public OptionalHeader As New IMAGE_OPTIONAL_HEADER32
+End Class
+
 Public Class IMAGE_FILE_HEADER
     Public Machine, NumberOfSections As UShort
     Public TimeDateStamp, PointerToSymbolTable, NumberOfSymbols As Integer
