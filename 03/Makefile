@@ -1,4 +1,5 @@
-TARGET   = makeexe1.exe makeexe2.exe makeexe3.exe
+TARGET   = makeexe1.exe makeexe2.exe makeexe3.exe test1.o
+AS       = as
 CXX      = g++
 CXXFLAGS = -std=c++0x
 
@@ -12,6 +13,9 @@ makeexe2.exe: makeexe2.cpp
 
 makeexe3.exe: makeexe3.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
+
+test1.o: test1.s
+	$(AS) -o $@ $<
 
 clean:
 	rm -f $(TARGET) output.exe
