@@ -14,7 +14,7 @@ Module Module1
             .e_lfarlc = &H40,
             .e_lfanew = &H80}
         writeFields(image, 0, dosh)
-        writebin(image, &H40, {&HB8, 1, &H4C, &HCD, &H21})
+        write8s(image, &H40, &HB8, 1, &H4C, &HCD, &H21)
 
         ' PE header
         writestr(image, &H80, "PE")

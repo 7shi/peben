@@ -30,13 +30,13 @@ Module Utils
         Return pos
     End Function
 
-    Function writebin%(image As Byte(), pos%, bin As Byte())
+    Function write8s%(image As Byte(), pos%, ParamArray bin As Byte())
         Array.Copy(bin, 0, image, pos, bin.Length)
         Return pos + bin.Length
     End Function
 
     Function writestr%(image As Byte(), pos%, s$)
-        Return writebin(image, pos, Encoding.UTF8.GetBytes(s))
+        Return write8s(image, pos, Encoding.UTF8.GetBytes(s))
     End Function
 
     Function conv16(s$) As UShort
@@ -57,7 +57,7 @@ Module Utils
             ElseIf TypeOf v Is Integer Then
                 pos = write32(image, pos, CInt(v))
             ElseIf TypeOf v Is Byte() Then
-                pos = writebin(image, pos, CType(v, Byte()))
+                pos = write8s(image, pos, CType(v, Byte()))
             ElseIf TypeOf v Is UShort() Then
                 pos = write16s(image, pos, CType(v, UShort()))
             ElseIf TypeOf v Is Integer() Then
