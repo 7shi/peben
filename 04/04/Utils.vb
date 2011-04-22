@@ -44,4 +44,28 @@ Module Utils
         ReDim Preserve bin(1)
         Return BitConverter.ToUInt16(bin, 0)
     End Function
+
+    Function writeFields%(image As Byte(), pos%, obj As Object)
+        Dim t = obj.GetType
+        For Each f In t.GetFields()
+            Dim v = f.GetValue(obj)
+            If TypeOf v Is Byte Then
+                image(pos) = CByte(v)
+                pos += 1
+            ElseIf TypeOf v Is UShort Then
+                pos = write16(image, pos, CUShort(v))
+            ElseIf TypeOf v Is Integer Then
+                pos = write32(image, pos, CInt(v))
+            ElseIf TypeOf v Is Byte() Then
+                pos = writebin(image, pos, CType(v, Byte()))
+            ElseIf TypeOf v Is UShort() Then
+                pos = write16s(image, pos, CType(v, UShort()))
+            ElseIf TypeOf v Is Integer() Then
+                pos = write32s(image, pos, CType(v, Integer()))
+            Else
+                Throw New ArgumentException("不明な型: ", t.FullName)
+            End If
+        Next
+        Return pos
+    End Function
 End Module

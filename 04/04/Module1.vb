@@ -13,7 +13,7 @@ Module Module1
             .e_sp = &HB8,
             .e_lfarlc = &H40,
             .e_lfanew = &H80}
-        dosh.write(image, 0)
+        writeFields(image, 0, dosh)
         writebin(image, &H40, {&HB8, 1, &H4C, &HCD, &H21})
 
         ' PE header
@@ -23,7 +23,7 @@ Module Module1
             .NumberOfSections = 1,
             .SizeOfOptionalHeader = &HE0,
             .Characteristics = &H102}
-        fh.write(image, &H84)
+        writeFields(image, &H84, fh)
         write16(image, &H98, &H10B)
         image(&H9A) = 10
         write32(image, &H9C, &H200)
