@@ -1,4 +1,4 @@
-TARGET   = makeexe1.exe makeexe2.exe makeexe3.exe test1.o prtnum.dll test2.exe
+TARGET   = makeexe1.exe makeexe2.exe makeexe3.exe test1.o prtnum.dll test2.exe test3.exe
 AS       = as
 CC       = gcc
 CXX      = g++
@@ -23,6 +23,9 @@ prtnum.dll: prtnum.c
 
 test2.exe: test2.c prtnum.dll
 	$(CC) -o $@ $^
+
+test3.exe: test3.c prtnum.dll
+	$(CC) -o $@ -nostdlib $^
 
 clean:
 	rm -f $(TARGET) output.exe
