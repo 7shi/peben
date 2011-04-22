@@ -18,10 +18,12 @@ Module Module1
 
         ' PE header
         writestr(image, &H80, "PE")
-        write16(image, &H84, &H14C)
-        write16(image, &H86, 1)
-        write16(image, &H94, &HE0)
-        write16(image, &H96, &H102)
+        Dim fh = New IMAGE_FILE_HEADER With {
+            .Machine = &H14C,
+            .NumberOfSections = 1,
+            .SizeOfOptionalHeader = &HE0,
+            .Characteristics = &H102}
+        fh.write(image, &H84)
         write16(image, &H98, &H10B)
         image(&H9A) = 10
         write32(image, &H9C, &H200)

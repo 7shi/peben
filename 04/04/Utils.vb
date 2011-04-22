@@ -21,6 +21,14 @@ Module Utils
         image(pos + 3) = (v >> 24) And &HFF
     End Sub
 
+    Function write32s%(image As Byte(), pos%, ParamArray vs%())
+        For Each v In vs
+            write32(image, pos, v)
+            pos += 4
+        Next
+        Return pos
+    End Function
+
     Sub writebin(image As Byte(), pos%, bin As Byte())
         Array.Copy(bin, 0, image, pos, bin.Length)
     End Sub

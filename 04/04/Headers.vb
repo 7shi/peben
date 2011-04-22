@@ -13,3 +13,15 @@
         write32(image, pos, e_lfanew)
     End Sub
 End Class
+
+Public Class IMAGE_FILE_HEADER
+    Public Machine, NumberOfSections As UShort
+    Public TimeDateStamp, PointerToSymbolTable, NumberOfSymbols As Integer
+    Public SizeOfOptionalHeader, Characteristics As UShort
+
+    Sub write(image As Byte(), pos%)
+        pos = write16s(image, pos, Machine, NumberOfSections)
+        pos = write32s(image, pos, TimeDateStamp, PointerToSymbolTable, NumberOfSymbols)
+        pos = write16s(image, pos, SizeOfOptionalHeader, Characteristics)
+    End Sub
+End Class
