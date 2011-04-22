@@ -1,4 +1,5 @@
-TARGET   = makeexe1.exe makeexe2.exe makeexe3.exe test1.o prtnum.dll test2.exe test3.exe
+TARGET   = makeexe1.exe makeexe2.exe makeexe3.exe makeexe4.exe \
+           test1.o prtnum.dll test2.exe test3.exe
 AS       = as
 CC       = gcc
 CXX      = g++
@@ -13,6 +14,9 @@ makeexe2.exe: makeexe2.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 makeexe3.exe: makeexe3.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $<
+
+makeexe4.exe: makeexe4.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $<
 
 test1.o: test1.s
