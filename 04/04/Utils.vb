@@ -51,6 +51,12 @@ Module Utils
         Return BitConverter.ToInt32(bin, 0)
     End Function
 
+    Function getBytes(s$, len%)
+        Dim bin = Encoding.UTF8.GetBytes(s)
+        ReDim Preserve bin(len - 1)
+        Return bin
+    End Function
+
     Function writeAny%(image As Byte(), pos%, v As Object)
         If TypeOf v Is Byte Then
             image(pos) = CByte(v)

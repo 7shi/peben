@@ -50,15 +50,15 @@ Module Module1
         End With
         writeFields(image, &H80, peh)
 
-        ' section header
-        writestr(image, &H178, ".text")
-        write32(image, &H180, 1)
-        write32(image, &H184, &H1000)
-        write32(image, &H188, &H200)
-        write32(image, &H18C, &H200)
-        write32(image, &H19C, &H60000020)
+        Dim text = New IMAGE_SECTION_HEADER With {
+            .Name = getBytes(".text", 8),
+            .VirtualSize = 1,
+            .VirtualAddress = &H1000,
+            .SizeOfRawData = &H200,
+            .PointerToRawData = &H200,
+            .Characteristics = &H60000020}
+        writeFields(image, &H178, text)
 
-        ' .text
         image(&H200) = &HC3
 
         Using fs = New FileStream("output.exe", FileMode.Create)

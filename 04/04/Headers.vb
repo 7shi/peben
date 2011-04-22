@@ -45,3 +45,11 @@ End Class
 Public Class IMAGE_DATA_DIRECTORY
     Public VirtualAddress, Size As Integer
 End Class
+
+Public Class IMAGE_SECTION_HEADER
+    Public Name(7) As Byte
+    Public VirtualSize, VirtualAddress, SizeOfRawData,
+           PointerToRawData, PointerToRelocations, PointerToLinenumbers As Integer
+    Public NumberOfRelocations, NumberOfLinenumbers As UShort
+    Public Characteristics%
+End Class
