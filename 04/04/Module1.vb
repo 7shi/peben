@@ -2,13 +2,20 @@
 Imports System.Text
 
 Module Module1
-
     Dim image(&H3FF) As Byte
 
     Sub write16(pos%, v As UShort)
         image(pos) = v And &HFF
         image(pos + 1) = v >> 8
     End Sub
+
+    Function write16s%(pos%, ParamArray vs As UShort())
+        For Each v In vs
+            write16(pos, v)
+            pos += 2
+        Next
+        Return pos
+    End Function
 
     Sub write32(pos%, v%)
         image(pos) = v And &HFF
@@ -25,18 +32,23 @@ Module Module1
         writebin(pos, Encoding.UTF8.GetBytes(s))
     End Sub
 
-    Sub Main()
-        ' dos header
-        writestr(0, "MZ")
-        write16(2, &H90)
-        write16(4, 3)
-        write16(8, 4)
-        write16(&HC, &HFFFF)
-        write16(&H10, &HB8)
-        write16(&H18, &H40)
-        write32(&H3C, &H80)
+    Function conv16(s$) As UShort
+        Dim bin = Encoding.UTF8.GetBytes(s)
+        ReDim Preserve bin(1)
+        Return BitConverter.ToUInt16(bin, 0)
+    End Function
 
-        ' dos binary
+    Sub Main()
+        Dim dosh = New IMAGE_DOS_HEADER With {
+            .e_magic = conv16("MZ"),
+            .e_cblp = &H90,
+            .e_cp = 3,
+            .e_cparhdr = 4,
+            .e_maxalloc = &HFFFF,
+            .e_sp = &HB8,
+            .e_lfarlc = &H40,
+            .e_lfanew = &H80}
+        dosh.write(0)
         writebin(&H40, {&HB8, 1, &H4C, &HCD, &H21})
 
         ' PE header
@@ -83,5 +95,4 @@ Module Module1
             fs.Write(image, 0, image.Length)
         End Using
     End Sub
-
 End Module
