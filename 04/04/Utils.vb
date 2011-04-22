@@ -61,11 +61,18 @@ Module Utils
             Return write32s(image, pos, CType(v, Integer()))
         Else
             Dim t = v.GetType
-            Dim fs = t.GetFields
-            If fs.Length > 0 Then
-                Return writeFields(image, pos, v)
+            If t.IsArray Then
+                For Each obj In CType(v, Array)
+                    pos = writeAny(image, pos, obj)
+                Next
+                Return pos
             Else
-                Throw New ArgumentException("不明な型: ", t.FullName)
+                Dim fs = t.GetFields
+                If fs.Length > 0 Then
+                    Return writeFields(image, pos, v)
+                Else
+                    Throw New ArgumentException("不明な型: ", t.FullName)
+                End If
             End If
         End If
     End Function
