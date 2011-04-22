@@ -18,34 +18,38 @@ Module Module1
 
         ' PE header
         writestr(image, &H80, "PE")
+
         Dim fh = New IMAGE_FILE_HEADER With {
             .Machine = &H14C,
             .NumberOfSections = 1,
             .SizeOfOptionalHeader = &HE0,
             .Characteristics = &H102}
         writeFields(image, &H84, fh)
-        write16(image, &H98, &H10B)
-        image(&H9A) = 10
-        write32(image, &H9C, &H200)
-        write32(image, &HA8, &H1000)
-        write32(image, &HAC, &H1000)
-        write32(image, &HB0, &H2000)
-        write32(image, &HB4, &H400000)
-        write32(image, &HB8, &H1000)
-        write32(image, &HBC, &H200)
-        write16(image, &HC0, 5)
-        write16(image, &HC2, 1)
-        write16(image, &HC8, 5)
-        write16(image, &HCA, 1)
-        write32(image, &HD0, &H2000)
-        write32(image, &HD4, &H200)
-        write16(image, &HDC, 2)
-        write16(image, &HDE, &H8540)
-        write32(image, &HE0, &H100000)
-        write32(image, &HE4, &H1000)
-        write32(image, &HE8, &H100000)
-        write32(image, &HEC, &H1000)
-        write32(image, &HF5, &H10)
+
+        Dim oph = New IMAGE_OPTIONAL_HEADER32 With {
+            .Magic = &H10B,
+            .MajorLinkerVersion = 10,
+            .SizeOfCode = &H200,
+            .AddressOfEntryPoint = &H1000,
+            .BaseOfCode = &H1000,
+            .BaseOfData = &H2000,
+            .ImageBase = &H400000,
+            .SectionAlignment = &H1000,
+            .FileAlignment = &H200,
+            .MajorOperatingSystemVersion = 5,
+            .MinorOperatingSystemVersion = 1,
+            .MajorSubsystemVersion = 5,
+            .MinorSubsystemVersion = 1,
+            .SizeOfImage = &H2000,
+            .SizeOfHeaders = &H200,
+            .Subsystem = 2,
+            .DllCharacteristics = &H8540,
+            .SizeOfStackReserve = &H100000,
+            .SizeOfStackCommit = &H1000,
+            .SizeOfHeapReserve = &H100000,
+            .SizeOfHeapCommit = &H1000,
+            .NumberOfRvaAndSizes = 16}
+        writeFields(image, &H98, oph)
 
         ' section header
         writestr(image, &H178, ".text")
