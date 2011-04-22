@@ -15,7 +15,7 @@ int main()
     dosh->e_sp = 0xb8;
     dosh->e_lfarlc = 0x40;
     dosh->e_lfanew = 0x80;
-    BYTE stub[] = { 0xb8, 0x01, 0x4c, 0xcd, 0x21 }; // メッセージを省略
+    BYTE stub[] = { 0xb8, 0x01, 0x4c, 0xcd, 0x21 }; // 繝｡繝�繧ｻ繝ｼ繧ｸ繧堤怐逡･
     memcpy(&image[0x40], stub, sizeof(stub));
     
     auto peh = reinterpret_cast<IMAGE_NT_HEADERS32*>(&image[0x80]);
