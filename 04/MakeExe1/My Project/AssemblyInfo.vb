@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' アセンブリ属性の値を確認します。
 
-<Assembly: AssemblyTitle("04")> 
+<Assembly: AssemblyTitle("MakeExe1")> 
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("04")> 
-<Assembly: AssemblyCopyright("Public Domain")> 
+<Assembly: AssemblyProduct("MakeExe1")> 
+<Assembly: AssemblyCopyright("Copyright ©  2011")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
 
 'このプロジェクトが COM に公開される場合、次の GUID がタイプ ライブラリの ID になります。
-<Assembly: Guid("e3658d6e-9f94-40ee-9a9a-970ba5736c25")> 
+<Assembly: Guid("1d252f06-fabd-4905-943f-65d7b9e62aa6")> 
 
 ' アセンブリのバージョン情報は、以下の 4 つの値で構成されています:
 '

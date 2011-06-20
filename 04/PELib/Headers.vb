@@ -51,3 +51,8 @@ Public Class IMAGE_SECTION_HEADER
     Public NumberOfRelocations, NumberOfLinenumbers As UShort
     Public Characteristics%
 End Class
+
+Public Class IMAGE_IMPORT_DESCRIPTOR
+    Public OriginalFirstThunk, TimeDateStamp, ForwarderChain,
+           Name, FirstThunk As Integer
+End Class
