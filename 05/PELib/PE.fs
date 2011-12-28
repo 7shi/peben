@@ -5,7 +5,7 @@ open System.Collections.Generic
 open Headers
 open Utils
 
-let createIData rva (dlls:Dictionary<string, string[]>) (result:Dictionary<string, int>) =
+let createIData rva (dlls:Dictionary<string, string list>) (result:Dictionary<string, int>) =
     let nsym = Seq.sum (seq { for syms in dlls.Values -> syms.Length })
     let thunklen = 4 * (nsym + dlls.Count)
     let namelen = Seq.sum (seq { for dll in dlls.Keys -> align (dll.Length + 1) 4 })
@@ -18,15 +18,14 @@ let createIData rva (dlls:Dictionary<string, string[]>) (result:Dictionary<strin
     let mutable p = 0
     let ret = Array.zeroCreate<byte>(psym + symlen)
     for dll in dlls do
-        ignore <| writeFields ret p {
+        p <- writeFields ret p {
             OriginalFirstThunk = rva + pthunk
             TimeDateStamp      = 0
             ForwarderChain     = 0
             Name               = rva + pname
             FirstThunk         = rva + pthunk + thunklen }
-        p <- p + 20
         ignore <| writestr ret pname dll.Key
-        pname <- align (dll.Key.Length + 1) 4
+        pname <- pname + align (dll.Key.Length + 1) 4
         for sym in dll.Value do
             if result <> null then result.[sym] <- rva + pthunk + thunklen
             ignore <| write32 ret pthunk [| (rva + psym) |]
