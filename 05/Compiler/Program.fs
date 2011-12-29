@@ -6,7 +6,7 @@ open Headers
 open Utils
 open PE
 
-let mutable MessageBoxA, wsprintfA = 0, 0
+let mutable ExitProcess, MessageBoxA, wsprintfA = 0, 0, 0
 let image = Array.zeroCreate<byte> 0x200
 
 let source = [
@@ -52,7 +52,11 @@ let Compile (lines:string list) =
             ret.AddRange(BitConverter.GetBytes MessageBoxA)
         | _ ->
             raise <| new Exception("error: " + tokens.[0])
-    ret.Add 0xC3uy
+    //ret.Add 0xC3uy
+    ret.Add 0x68uy
+    ret.AddRange(BitConverter.GetBytes 0)
+    ret.AddRange [ 0xFFuy; 0x15uy ]
+    ret.AddRange(BitConverter.GetBytes ExitProcess)
     ret.ToArray()
 
 ignore <| writeFields image 0 {
@@ -138,9 +142,11 @@ let peh = {
 
 let idata_rva = 0x3000
 let dlls = new Dictionary<string, string list>()
-dlls.["user32.dll"] <- [ "MessageBoxA"; "wsprintfA" ]
+dlls.["kernel32.dll"] <- [ "ExitProcess" ]
+dlls.["user32.dll"  ] <- [ "MessageBoxA"; "wsprintfA" ]
 let result = new Dictionary<string, int>()
 let mutable idata = createIData idata_rva dlls result
+ExitProcess <- peh.OptionalHeader.ImageBase + result.["ExitProcess"]
 MessageBoxA <- peh.OptionalHeader.ImageBase + result.["MessageBoxA"]
 wsprintfA   <- peh.OptionalHeader.ImageBase + result.["wsprintfA"]
 
