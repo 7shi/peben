@@ -108,10 +108,9 @@ let dlls = new Dictionary<string, string list>()
 dlls.["test1.dll"] <- [ "func1a"; "func1b" ]
 dlls.["test2.dll"] <- [ "func2a"; "func2b" ]
 
-let idata' = ref (createIData idata_rva dlls null)
-let idatalen = (!idata').Length
-Array.Resize(idata', align idatalen peh.OptionalHeader.FileAlignment)
-let idata = !idata'
+let mutable idata = createIData idata_rva dlls null
+let idatalen = idata.Length
+idata <- resizeArray idata (align idatalen peh.OptionalHeader.FileAlignment)
 
 peh.OptionalHeader.DataDirectory.[1] <- {
     VirtualAddress = idata_rva

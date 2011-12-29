@@ -65,3 +65,8 @@ let getBytes (s:string) len =
     let bin = ref (Encoding.ASCII.GetBytes s)
     Array.Resize<byte>(bin, len)
     !bin
+
+let resizeArray arr size =
+    let orig = ref arr
+    Array.Resize(orig, size)
+    !orig
