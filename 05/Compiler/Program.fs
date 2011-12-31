@@ -19,44 +19,32 @@ let Compile (lines:string list) =
     let ret = new List<byte>()
     for line in lines do
         let tokens = line.Split(' ')
+        let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
         match tokens.[0] with
         | "LET" ->
-            ret.Add 0xB8uy
-            ret.AddRange(BitConverter.GetBytes(Convert.ToInt32 tokens.[2]))
-            ret.Add 0xA3uy
-            ret.AddRange(BitConverter.GetBytes(0x402018 + ((int tokens.[1].[0]) - (int 'A')) * 4))
+            I386.movr ret I386.Reg32.eax (Convert.ToInt32 tokens.[2])
+            I386.movar ret (getarg 1) I386.Reg32.eax
         | "ADD" ->
-            ret.Add 0xA1uy
-            ret.AddRange(BitConverter.GetBytes(0x402018 + ((int tokens.[2].[0]) - (int 'A')) * 4))
-            ret.AddRange [ 1uy; 5uy ]
-            ret.AddRange(BitConverter.GetBytes(0x402018 + ((int tokens.[1].[0]) - (int 'A')) * 4))
+            I386.movra ret I386.Reg32.eax (getarg 2)
+            I386.addar ret (getarg 1) I386.Reg32.eax
         | "DISP" ->
-            ret.AddRange [ 0xFFuy; 0x35uy ]
-            ret.AddRange(BitConverter.GetBytes(0x402018 + ((int tokens.[1].[0]) - (int 'A')) * 4))
-            ret.Add 0x68uy
-            ret.AddRange(BitConverter.GetBytes 0x402010)
-            ret.Add 0x68uy
-            ret.AddRange(BitConverter.GetBytes 0x402000)
-            ret.AddRange [ 0xFFuy; 0x15uy ]
-            ret.AddRange(BitConverter.GetBytes wsprintfA)
-            ret.AddRange [ 0x58uy; 0x58uy; 0x58uy ]
-            ret.Add 0x68uy
-            ret.AddRange(BitConverter.GetBytes 0)
-            ret.Add 0x68uy
-            ret.AddRange(BitConverter.GetBytes 0)
-            ret.Add 0x68uy
-            ret.AddRange(BitConverter.GetBytes 0x402000)
-            ret.Add 0x68uy
-            ret.AddRange(BitConverter.GetBytes 0)
-            ret.AddRange [ 0xFFuy; 0x15uy ]
-            ret.AddRange(BitConverter.GetBytes MessageBoxA)
+            I386.pusha ret (getarg 1)
+            I386.pushd ret 0x402010
+            I386.pushd ret 0x402000
+            I386.calla ret wsprintfA
+            I386.pop ret I386.Reg32.eax
+            I386.pop ret I386.Reg32.eax
+            I386.pop ret I386.Reg32.eax
+            I386.pushd ret 0
+            I386.pushd ret 0
+            I386.pushd ret 0x402000
+            I386.pushd ret 0
+            I386.calla ret MessageBoxA
         | _ ->
             raise <| new Exception("error: " + tokens.[0])
     //ret.Add 0xC3uy
-    ret.Add 0x68uy
-    ret.AddRange(BitConverter.GetBytes 0)
-    ret.AddRange [ 0xFFuy; 0x15uy ]
-    ret.AddRange(BitConverter.GetBytes ExitProcess)
+    I386.pushd ret 0
+    I386.calla ret ExitProcess
     ret.ToArray()
 
 ignore <| writeFields image 0 {
