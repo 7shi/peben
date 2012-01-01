@@ -6,7 +6,6 @@ open PELib.Headers
 open PELib.Utils
 open PELib.PE
 
-let mutable ExitProcess, MessageBoxA, wsprintfA = 0, 0, 0
 let image = Array.zeroCreate<byte> 0x200
 
 let source = [
@@ -14,39 +13,6 @@ let source = [
     "LET B 2"
     "ADD A B"
     "DISP A" ]
-
-let Compile (lines:string list) =
-    let ret = new List<byte>()
-    let x = new PELib.I386.Assembler(ret)
-    for line in lines do
-        let tokens = line.Split(' ')
-        let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
-        match tokens.[0] with
-        | "LET" ->
-            x.mov(PELib.I386.eax, Convert.ToInt32 tokens.[2])
-            x.mov([getarg 1], PELib.I386.eax)
-        | "ADD" ->
-            x.mov(PELib.I386.eax, [getarg 2])
-            x.add([getarg 1], PELib.I386.eax)
-        | "DISP" ->
-            x.push [getarg 1]
-            x.push 0x402010
-            x.push 0x402000
-            x.call [wsprintfA]
-            x.pop PELib.I386.eax
-            x.pop PELib.I386.eax
-            x.pop PELib.I386.eax
-            x.push 0
-            x.push 0
-            x.push 0x402000
-            x.push 0
-            x.call [MessageBoxA]
-        | _ ->
-            raise <| new Exception("error: " + tokens.[0])
-    //ret.Add 0xC3uy
-    x.push 0
-    x.call [ExitProcess]
-    ret.ToArray()
 
 ignore <| writeFields image 0 {
     e_magic     = conv16 "MZ"
@@ -133,13 +99,10 @@ let idata_rva = 0x3000
 let dlls = new Dictionary<string, string list>()
 dlls.["kernel32.dll"] <- [ "ExitProcess" ]
 dlls.["user32.dll"  ] <- [ "MessageBoxA"; "wsprintfA" ]
-let result = new Dictionary<string, int>()
-let mutable idata = createIData idata_rva dlls result
-ExitProcess <- peh.OptionalHeader.ImageBase + result.["ExitProcess"]
-MessageBoxA <- peh.OptionalHeader.ImageBase + result.["MessageBoxA"]
-wsprintfA   <- peh.OptionalHeader.ImageBase + result.["wsprintfA"]
+let imports = new Dictionary<string, int>()
+let mutable idata = createIData idata_rva dlls imports
 
-let mutable text = Compile(source)
+let mutable text = I386.Compile source peh imports
 let textlen = text.Length
 text <- resizeArray text (align text.Length peh.OptionalHeader.FileAlignment)
 
