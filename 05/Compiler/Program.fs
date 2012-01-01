@@ -34,7 +34,9 @@ ignore <| writeFields image 0 {
     e_oeminfo   = 0us
     e_res2      = [| 0us; 0us; 0us; 0us; 0us; 0us; 0us; 0us; 0us; 0us |]
     e_lfanew    = 0x80 }
-ignore <| write8 image 0x40 [| 0xB8uy; 1uy; 0x4Cuy; 0xCDuy; 0x21uy |]
+ignore << write8 image 0x40 << PELib.I8086.write <| fun asm ->
+    asm.mov(PELib.I8086.ax, 0x4C01us)
+    asm.int 0x21uy
 
 let peh = {
     Signature = conv32 "PE"
