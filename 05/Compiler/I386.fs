@@ -6,33 +6,33 @@ open PELib.I386
 
 let Compile (lines:string list) (getaddr:string -> int) =
     let ret = new List<byte>()
-    let x = new Assembler(ret)
+    let asm = new Assembler(ret)
     for line in lines do
         let tokens = line.Split(' ')
         let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
         match tokens.[0] with
         | "LET" ->
-            x.mov(eax, Convert.ToInt32 tokens.[2])
-            x.mov([getarg 1], eax)
+            asm.mov(eax, Convert.ToInt32 tokens.[2])
+            asm.mov([getarg 1], eax)
         | "ADD" ->
-            x.mov(eax, [getarg 2])
-            x.add([getarg 1], eax)
+            asm.mov(eax, [getarg 2])
+            asm.add([getarg 1], eax)
         | "DISP" ->
-            x.push [getarg 1]
-            x.push 0x402010
-            x.push 0x402000
-            x.call [getaddr "wsprintfA"]
-            x.pop eax
-            x.pop eax
-            x.pop eax
-            x.push 0
-            x.push 0
-            x.push 0x402000
-            x.push 0
-            x.call [getaddr "MessageBoxA"]
+            asm.push [getarg 1]
+            asm.push 0x402010
+            asm.push 0x402000
+            asm.call [getaddr "wsprintfA"]
+            asm.pop eax
+            asm.pop eax
+            asm.pop eax
+            asm.push 0
+            asm.push 0
+            asm.push 0x402000
+            asm.push 0
+            asm.call [getaddr "MessageBoxA"]
         | _ ->
             raise <| new Exception("error: " + tokens.[0])
-    x.push 0
-    x.call [getaddr "ExitProcess"]
+    asm.push 0
+    asm.call [getaddr "ExitProcess"]
     //x.ret()
     ret.ToArray()
