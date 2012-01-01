@@ -2,13 +2,9 @@
 
 open System
 open System.Collections.Generic
-open PELib.Headers
 open PELib.I386
 
-let Compile (lines:string list) (peh:IMAGE_NT_HEADERS32) (imports:Dictionary<string, int>) =
-    let ExitProcess = peh.OptionalHeader.ImageBase + imports.["ExitProcess"]
-    let MessageBoxA = peh.OptionalHeader.ImageBase + imports.["MessageBoxA"]
-    let wsprintfA   = peh.OptionalHeader.ImageBase + imports.["wsprintfA"]
+let Compile (lines:string list) (getaddr:string -> int) =
     let ret = new List<byte>()
     let x = new Assembler(ret)
     for line in lines do
@@ -25,7 +21,7 @@ let Compile (lines:string list) (peh:IMAGE_NT_HEADERS32) (imports:Dictionary<str
             x.push [getarg 1]
             x.push 0x402010
             x.push 0x402000
-            x.call [wsprintfA]
+            x.call [getaddr "wsprintfA"]
             x.pop eax
             x.pop eax
             x.pop eax
@@ -33,10 +29,10 @@ let Compile (lines:string list) (peh:IMAGE_NT_HEADERS32) (imports:Dictionary<str
             x.push 0
             x.push 0x402000
             x.push 0
-            x.call [MessageBoxA]
+            x.call [getaddr "MessageBoxA"]
         | _ ->
             raise <| new Exception("error: " + tokens.[0])
     x.push 0
-    x.call [ExitProcess]
+    x.call [getaddr "ExitProcess"]
     //x.ret()
     ret.ToArray()

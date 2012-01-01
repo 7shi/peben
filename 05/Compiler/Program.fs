@@ -102,7 +102,8 @@ dlls.["user32.dll"  ] <- [ "MessageBoxA"; "wsprintfA" ]
 let imports = new Dictionary<string, int>()
 let mutable idata = createIData idata_rva dlls imports
 
-let mutable text = I386.Compile source peh imports
+let mutable text = I386.Compile source <| fun s ->
+    peh.OptionalHeader.ImageBase + imports.[s]
 let textlen = text.Length
 text <- resizeArray text (align text.Length peh.OptionalHeader.FileAlignment)
 
