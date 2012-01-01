@@ -34,5 +34,4 @@ let Compile (lines:string list) (getaddr:string -> int) =
             raise <| new Exception("error: " + tokens.[0])
     asm.push 0
     asm.call [getaddr "ExitProcess"]
-    //x.ret()
     ret.ToArray()
