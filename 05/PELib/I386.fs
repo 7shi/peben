@@ -58,3 +58,6 @@ type Assembler(list:List<byte>) =
     member x.call (a:int list) =
         list.AddRange [ 0xFFuy; 0x15uy ]
         list.AddRange(BitConverter.GetBytes a.[0])
+
+    member x.ret () =
+        list.Add 0xC3uy

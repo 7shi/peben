@@ -36,7 +36,7 @@ let Compile (lines:string list) (peh:IMAGE_NT_HEADERS32) (imports:Dictionary<str
             x.call [MessageBoxA]
         | _ ->
             raise <| new Exception("error: " + tokens.[0])
-    //ret.Add 0xC3uy
     x.push 0
     x.call [ExitProcess]
+    //x.ret()
     ret.ToArray()
