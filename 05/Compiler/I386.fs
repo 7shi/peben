@@ -3,52 +3,58 @@
 open System
 open System.Collections.Generic
 
-type Reg32 =
-    | eax = 0
-    | ecx = 1
-    | edx = 2
-    | ebx = 3
-    | esp = 4
-    | ebp = 5
-    | esi = 6
-    | edi = 7
+type Reg32(r:byte) =
+    member x.Value = r
+    override x.GetHashCode () = int r
+    override x.Equals (obj:obj) =
+        obj :? Reg32 && x.Value = (obj :?> Reg32).Value
 
-let movr (list:List<byte>) (r:Reg32) (v:int32) =
-    list.Add (0xB8uy + (byte r))
-    list.AddRange(BitConverter.GetBytes v)
+let eax = Reg32 0uy
+let ecx = Reg32 1uy
+let edx = Reg32 2uy
+let ebx = Reg32 3uy
+let esp = Reg32 4uy
+let ebp = Reg32 5uy
+let esi = Reg32 6uy
+let edi = Reg32 7uy
 
-let movar (list:List<byte>) (a:int32) (r:Reg32) =
-    if r = Reg32.eax then
-        list.Add 0xA3uy
-    else
-        list.AddRange [ 0x89uy; 5uy + ((byte r) <<< 5) ]
-    list.AddRange(BitConverter.GetBytes a)
+type Assembler(list:List<byte>) =
+    member x.mov (r:Reg32, v:int32) =
+        list.Add (0xB8uy + r.Value)
+        list.AddRange(BitConverter.GetBytes v)
 
-let movra (list:List<byte>) (r:Reg32) (a:int32) =
-    if r = Reg32.eax then
-        list.Add 0xA1uy
-    else
-        list.AddRange [ 0x8Buy; 5uy + ((byte r) <<< 5) ]
-    list.AddRange(BitConverter.GetBytes a)
+    member x.mov (a:int32 list, r:Reg32) =
+        if r = eax then
+            list.Add 0xA3uy
+        else
+            list.AddRange [ 0x89uy; 5uy + (r.Value <<< 5) ]
+        list.AddRange(BitConverter.GetBytes a.[0])
 
-let addar (list:List<byte>) (a:int32) (r:Reg32) =
-    list.AddRange [ 1uy; 5uy + ((byte r) <<< 5) ]
-    list.AddRange(BitConverter.GetBytes a)
+    member x.mov (r:Reg32, a:int32 list) =
+        if r = eax then
+            list.Add 0xA1uy
+        else
+            list.AddRange [ 0x8Buy; 5uy + (r.Value <<< 5) ]
+        list.AddRange(BitConverter.GetBytes a.[0])
 
-let push (list:List<byte>) (r:Reg32) =
-    list.Add (0x50uy + (byte r))
+    member x.add (a:int32 list, r:Reg32) =
+        list.AddRange [ 1uy; 5uy + (r.Value <<< 5) ]
+        list.AddRange(BitConverter.GetBytes a.[0])
 
-let pop (list:List<byte>) (r:Reg32) =
-    list.Add (0x58uy + (byte r))
+    member x.push (r:Reg32) =
+        list.Add (0x50uy + r.Value)
 
-let pushd (list:List<byte>) (v:int) =
-    list.Add 0x68uy
-    list.AddRange(BitConverter.GetBytes v)
+    member x.pop (r:Reg32) =
+        list.Add (0x58uy + r.Value)
 
-let pusha (list:List<byte>) (a:int) = 
-    list.AddRange [ 0xFFuy; 0x35uy ]
-    list.AddRange(BitConverter.GetBytes a)
+    member x.push (v:int) =
+        list.Add 0x68uy
+        list.AddRange(BitConverter.GetBytes v)
 
-let calla (list:List<byte>) (a:int) =
-    list.AddRange [ 0xFFuy; 0x15uy ]
-    list.AddRange(BitConverter.GetBytes a)
+    member x.push (a:int list) = 
+        list.AddRange [ 0xFFuy; 0x35uy ]
+        list.AddRange(BitConverter.GetBytes a.[0])
+
+    member x.call (a:int list) =
+        list.AddRange [ 0xFFuy; 0x15uy ]
+        list.AddRange(BitConverter.GetBytes a.[0])

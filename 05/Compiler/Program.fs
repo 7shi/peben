@@ -17,34 +17,35 @@ let source = [
 
 let Compile (lines:string list) =
     let ret = new List<byte>()
+    let x = new I386.Assembler(ret)
     for line in lines do
         let tokens = line.Split(' ')
         let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
         match tokens.[0] with
         | "LET" ->
-            I386.movr ret I386.Reg32.eax (Convert.ToInt32 tokens.[2])
-            I386.movar ret (getarg 1) I386.Reg32.eax
+            x.mov(I386.eax, Convert.ToInt32 tokens.[2])
+            x.mov([getarg 1], I386.eax)
         | "ADD" ->
-            I386.movra ret I386.Reg32.eax (getarg 2)
-            I386.addar ret (getarg 1) I386.Reg32.eax
+            x.mov(I386.eax, [getarg 2])
+            x.add([getarg 1], I386.eax)
         | "DISP" ->
-            I386.pusha ret (getarg 1)
-            I386.pushd ret 0x402010
-            I386.pushd ret 0x402000
-            I386.calla ret wsprintfA
-            I386.pop ret I386.Reg32.eax
-            I386.pop ret I386.Reg32.eax
-            I386.pop ret I386.Reg32.eax
-            I386.pushd ret 0
-            I386.pushd ret 0
-            I386.pushd ret 0x402000
-            I386.pushd ret 0
-            I386.calla ret MessageBoxA
+            x.push [getarg 1]
+            x.push 0x402010
+            x.push 0x402000
+            x.call [wsprintfA]
+            x.pop I386.eax
+            x.pop I386.eax
+            x.pop I386.eax
+            x.push 0
+            x.push 0
+            x.push 0x402000
+            x.push 0
+            x.call [MessageBoxA]
         | _ ->
             raise <| new Exception("error: " + tokens.[0])
     //ret.Add 0xC3uy
-    I386.pushd ret 0
-    I386.calla ret ExitProcess
+    x.push 0
+    x.call [ExitProcess]
     ret.ToArray()
 
 ignore <| writeFields image 0 {
