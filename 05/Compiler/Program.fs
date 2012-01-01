@@ -2,9 +2,9 @@
 open System.Collections.Generic
 open System.IO
 open System.Text
-open Headers
-open Utils
-open PE
+open PELib.Headers
+open PELib.Utils
+open PELib.PE
 
 let mutable ExitProcess, MessageBoxA, wsprintfA = 0, 0, 0
 let image = Array.zeroCreate<byte> 0x200
@@ -17,25 +17,25 @@ let source = [
 
 let Compile (lines:string list) =
     let ret = new List<byte>()
-    let x = new I386.Assembler(ret)
+    let x = new PELib.I386.Assembler(ret)
     for line in lines do
         let tokens = line.Split(' ')
         let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
         match tokens.[0] with
         | "LET" ->
-            x.mov(I386.eax, Convert.ToInt32 tokens.[2])
-            x.mov([getarg 1], I386.eax)
+            x.mov(PELib.I386.eax, Convert.ToInt32 tokens.[2])
+            x.mov([getarg 1], PELib.I386.eax)
         | "ADD" ->
-            x.mov(I386.eax, [getarg 2])
-            x.add([getarg 1], I386.eax)
+            x.mov(PELib.I386.eax, [getarg 2])
+            x.add([getarg 1], PELib.I386.eax)
         | "DISP" ->
             x.push [getarg 1]
             x.push 0x402010
             x.push 0x402000
             x.call [wsprintfA]
-            x.pop I386.eax
-            x.pop I386.eax
-            x.pop I386.eax
+            x.pop PELib.I386.eax
+            x.pop PELib.I386.eax
+            x.pop PELib.I386.eax
             x.push 0
             x.push 0
             x.push 0x402000

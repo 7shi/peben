@@ -1,9 +1,9 @@
 ﻿open System
 open System.IO
 open System.Text
-open Headers
-open Utils
-open PE
+open PELib.Headers
+open PELib.Utils
+open PELib.PE
 
 let image = Array.zeroCreate<byte> 0x400
 

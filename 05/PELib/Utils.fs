@@ -1,4 +1,4 @@
-﻿module Utils
+﻿module PELib.Utils
 
 open System
 open System.Reflection

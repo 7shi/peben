@@ -1,7 +1,7 @@
 ﻿open System
 open System.IO
-open Utils
-open PE
+open PELib.Utils
+open PELib.PE
 
 let image = Array.zeroCreate<byte> 0x400
 

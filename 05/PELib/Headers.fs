@@ -1,4 +1,4 @@
-﻿namespace Headers
+﻿namespace PELib.Headers
 
 type IMAGE_DOS_HEADER = {
     mutable e_magic     : uint16

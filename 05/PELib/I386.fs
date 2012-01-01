@@ -1,4 +1,4 @@
-﻿module I386
+﻿module PELib.I386
 
 open System
 open System.Collections.Generic

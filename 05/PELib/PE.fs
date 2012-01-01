@@ -1,9 +1,9 @@
-﻿module PE
+﻿module PELib.PE
 
 open System
 open System.Collections.Generic
-open Headers
-open Utils
+open PELib.Headers
+open PELib.Utils
 
 let createIData rva (dlls:Dictionary<string, string list>) (result:Dictionary<string, int>) =
     let nsym = Seq.sum (seq { for syms in dlls.Values -> syms.Length })
