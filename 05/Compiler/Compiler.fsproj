@@ -42,7 +42,6 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="I386.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
