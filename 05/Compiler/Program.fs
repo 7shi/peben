@@ -12,7 +12,9 @@ let source = [
     "ADD A B"
     "DISP A" ]
 
-let compiler = new I386.Compiler()
+//let compiler = new I386.Compiler()
+let compiler = new MIPS32el.Compiler()
+
 let image = Array.zeroCreate<byte> 0x200
 
 ignore <| writeFields image 0 {
