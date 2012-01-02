@@ -11,7 +11,7 @@ type Compiler() =
         let asm = new Assembler(ret)
         for line in lines do
             let tokens = line.Split(' ')
-            let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
+            let getarg n = 0x402030 + ((int tokens.[n].[0]) - (int 'A')) * 4
             match tokens.[0] with
             | "LET" ->
                 asm.Mov(eax, Convert.ToInt32 tokens.[2])
@@ -21,9 +21,9 @@ type Compiler() =
                 asm.Add([getarg 1], eax)
             | "DISP" ->
                 asm.Push [getarg 1]
-                asm.Push 0x402010
+                asm.Push 0x402020
                 asm.Push 0x402000
-                asm.Call [getaddr "wsprintfA"]
+                asm.Call [getaddr "wsprintfW"]
                 asm.Pop eax
                 asm.Pop eax
                 asm.Pop eax
@@ -31,7 +31,7 @@ type Compiler() =
                 asm.Push 0
                 asm.Push 0x402000
                 asm.Push 0
-                asm.Call [getaddr "MessageBoxA"]
+                asm.Call [getaddr "MessageBoxW"]
             | _ ->
                 raise <| new Exception("error: " + tokens.[0])
         asm.Push 0

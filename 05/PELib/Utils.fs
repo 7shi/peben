@@ -19,6 +19,9 @@ let write32 (image:byte[]) pos (values:int[]) =
 let writestr (image:byte[]) pos (s:string) =
     write8 image pos (Encoding.UTF8.GetBytes s)
 
+let writestr16 (image:byte[]) pos (s:string) =
+    write16 image pos [| for ch in s -> uint16 ch |]
+
 let rec writeAny (image:byte[]) pos (v:obj) =
     if v :? byte then
         image.[pos] <- unbox v

@@ -17,7 +17,7 @@ type Compiler() =
             asm.Nop // branch delay slot
         for line in lines do
             let tokens = line.Split(' ')
-            let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
+            let getarg n = 0x402030 + ((int tokens.[n].[0]) - (int 'A')) * 4
             match tokens.[0] with
             | "LET" ->
                 asm.La at (getarg 1)
@@ -34,14 +34,14 @@ type Compiler() =
             | "DISP" ->
                 asm.La at (getarg 1)
                 asm.Lw a2 0(at)
-                asm.La a1 0x402010
+                asm.La a1 0x402020
                 asm.La a0 0x402000
-                call "wsprintfA"
+                call "wsprintfW"
                 asm.Li a3 0
                 asm.Li a2 0
                 asm.La a1 0x402000
                 asm.Li a0 0
-                call "MessageBoxA"
+                call "MessageBoxW"
             | _ ->
                 raise <| new Exception("error: " + tokens.[0])
         asm.Li a0 0

@@ -103,7 +103,7 @@ let peh = {
 let idata_rva = 0x3000
 let dlls = new Dictionary<string, string list>()
 dlls.["kernel32.dll"] <- [ "ExitProcess" ]
-dlls.["user32.dll"  ] <- [ "MessageBoxA"; "wsprintfA" ]
+dlls.["user32.dll"  ] <- [ "MessageBoxW"; "wsprintfW" ]
 let imports = new Dictionary<string, int>()
 let mutable idata = createIData idata_rva dlls imports
 
@@ -125,8 +125,8 @@ psct <- writeFields image psct {
     NumberOfLinenumbers  = 0us
     Characteristics      = 0x60000020 }
 
-let mutable data = Array.zeroCreate<byte>(16 + 8 + 4 * 26)
-ignore <| writestr data 16 "%d"
+let mutable data = Array.zeroCreate<byte>(32 + 16 + 4 * 26)
+ignore <| writestr16 data 32 "%d"
 let datalen = data.Length
 data <- resizeArray data (align data.Length peh.OptionalHeader.FileAlignment)
 
