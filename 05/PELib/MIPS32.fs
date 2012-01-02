@@ -58,6 +58,7 @@ type Assembler(list:List<byte>, el:bool) =
     member x.Sllv   d t s = opr list el 0 s  t  d  0 0b000100
     member x.Srlv   d t s = opr list el 0 s  t  d  0 0b000110
     member x.Jr     s     = opr list el 0 s  r0 r0 0 0b001000
+    member x.Jalr   d s   = opr list el 0 s  r0 d  0 0b001001
     member x.Syscall      = opr list el 0 r0 r0 r0 0 0b001100
     member x.Mfhi   d     = opr list el 0 r0 r0 d  0 0b010000
     member x.Mflo   d     = opr list el 0 r0 r0 d  0 0b010010
