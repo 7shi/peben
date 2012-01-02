@@ -51,7 +51,7 @@ let inline opj (list:List<byte>) el op ad =
     add32 list el ((op <<< 26) ||| (ad &&& 0x03ffffff))
 
 type Assembler(list:List<byte>, el:bool) =
-    member x.Noop         = list.AddRange [ 0uy; 0uy; 0uy; 0uy ]
+    member x.Nop          = list.AddRange [ 0uy; 0uy; 0uy; 0uy ]
     member x.Sll    d t h = opr list el 0 r0 t  d  h 0b000000
     member x.Srl    d t h = opr list el 0 r0 t  d  h 0b000010
     member x.Sra    d t h = opr list el 0 r0 t  d  h 0b000011
