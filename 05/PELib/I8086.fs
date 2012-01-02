@@ -19,11 +19,11 @@ let si = Reg16 6uy
 let di = Reg16 7uy
 
 type Assembler(list:List<byte>) =
-    member x.mov (r:Reg16, v:uint16) =
+    member x.Mov (r:Reg16, v:uint16) =
         list.Add (0xB8uy + r.Value)
         list.AddRange(BitConverter.GetBytes v)
 
-    member x.int (v:byte) =
+    member x.Int (v:byte) =
         list.AddRange [ 0xCDuy; v ]
 
 let write (f:Assembler -> unit) =

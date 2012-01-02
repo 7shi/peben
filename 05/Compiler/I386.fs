@@ -14,26 +14,26 @@ type Compiler() =
             let getarg n = 0x402018 + ((int tokens.[n].[0]) - (int 'A')) * 4
             match tokens.[0] with
             | "LET" ->
-                asm.mov(eax, Convert.ToInt32 tokens.[2])
-                asm.mov([getarg 1], eax)
+                asm.Mov(eax, Convert.ToInt32 tokens.[2])
+                asm.Mov([getarg 1], eax)
             | "ADD" ->
-                asm.mov(eax, [getarg 2])
-                asm.add([getarg 1], eax)
+                asm.Mov(eax, [getarg 2])
+                asm.Add([getarg 1], eax)
             | "DISP" ->
-                asm.push [getarg 1]
-                asm.push 0x402010
-                asm.push 0x402000
-                asm.call [getaddr "wsprintfA"]
-                asm.pop eax
-                asm.pop eax
-                asm.pop eax
-                asm.push 0
-                asm.push 0
-                asm.push 0x402000
-                asm.push 0
-                asm.call [getaddr "MessageBoxA"]
+                asm.Push [getarg 1]
+                asm.Push 0x402010
+                asm.Push 0x402000
+                asm.Call [getaddr "wsprintfA"]
+                asm.Pop eax
+                asm.Pop eax
+                asm.Pop eax
+                asm.Push 0
+                asm.Push 0
+                asm.Push 0x402000
+                asm.Push 0
+                asm.Call [getaddr "MessageBoxA"]
             | _ ->
                 raise <| new Exception("error: " + tokens.[0])
-        asm.push 0
-        asm.call [getaddr "ExitProcess"]
+        asm.Push 0
+        asm.Call [getaddr "ExitProcess"]
         ret.ToArray()

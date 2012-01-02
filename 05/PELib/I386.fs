@@ -19,45 +19,45 @@ let esi = Reg32 6uy
 let edi = Reg32 7uy
 
 type Assembler(list:List<byte>) =
-    member x.mov (r:Reg32, v:int32) =
+    member x.Mov (r:Reg32, v:int32) =
         list.Add (0xB8uy + r.Value)
         list.AddRange(BitConverter.GetBytes v)
 
-    member x.mov (a:int32 list, r:Reg32) =
+    member x.Mov (a:int32 list, r:Reg32) =
         if r = eax then
             list.Add 0xA3uy
         else
             list.AddRange [ 0x89uy; 5uy + (r.Value <<< 5) ]
         list.AddRange(BitConverter.GetBytes a.[0])
 
-    member x.mov (r:Reg32, a:int32 list) =
+    member x.Mov (r:Reg32, a:int32 list) =
         if r = eax then
             list.Add 0xA1uy
         else
             list.AddRange [ 0x8Buy; 5uy + (r.Value <<< 5) ]
         list.AddRange(BitConverter.GetBytes a.[0])
 
-    member x.add (a:int32 list, r:Reg32) =
+    member x.Add (a:int32 list, r:Reg32) =
         list.AddRange [ 1uy; 5uy + (r.Value <<< 5) ]
         list.AddRange(BitConverter.GetBytes a.[0])
 
-    member x.push (r:Reg32) =
+    member x.Push (r:Reg32) =
         list.Add (0x50uy + r.Value)
 
-    member x.pop (r:Reg32) =
+    member x.Pop (r:Reg32) =
         list.Add (0x58uy + r.Value)
 
-    member x.push (v:int) =
+    member x.Push (v:int) =
         list.Add 0x68uy
         list.AddRange(BitConverter.GetBytes v)
 
-    member x.push (a:int list) = 
+    member x.Push (a:int list) = 
         list.AddRange [ 0xFFuy; 0x35uy ]
         list.AddRange(BitConverter.GetBytes a.[0])
 
-    member x.call (a:int list) =
+    member x.Call (a:int list) =
         list.AddRange [ 0xFFuy; 0x15uy ]
         list.AddRange(BitConverter.GetBytes a.[0])
 
-    member x.ret () =
+    member x.Ret () =
         list.Add 0xC3uy
