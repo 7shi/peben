@@ -1,4 +1,4 @@
-﻿module PELib.MIPS32
+﻿module PELib.MIPS
 
 open System
 open System.Collections.Generic

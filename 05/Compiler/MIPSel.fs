@@ -1,8 +1,8 @@
-﻿module MIPS32el
+﻿module MIPSel
 
 open System
 open System.Collections.Generic
-open PELib.MIPS32
+open PELib.MIPS
 
 type Compiler() =
     member x.Machine = 0x166us

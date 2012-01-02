@@ -13,7 +13,7 @@ let source = [
     "DISP A" ]
 
 //let compiler = new I386.Compiler()
-let compiler = new MIPS32el.Compiler()
+let compiler = new MIPSel.Compiler()
 
 let image = Array.zeroCreate<byte> 0x200
 
