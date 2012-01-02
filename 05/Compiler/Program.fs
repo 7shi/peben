@@ -6,13 +6,14 @@ open PELib.Headers
 open PELib.Utils
 open PELib.PE
 
-let image = Array.zeroCreate<byte> 0x200
-
 let source = [
     "LET A 1"
     "LET B 2"
     "ADD A B"
     "DISP A" ]
+
+let compiler = new I386.Compiler()
+let image = Array.zeroCreate<byte> 0x200
 
 ignore <| writeFields image 0 {
     e_magic     = conv16 "MZ"
@@ -41,7 +42,7 @@ ignore << write8 image 0x40 << PELib.I8086.write <| fun asm ->
 let peh = {
     Signature = conv32 "PE"
     FileHeader =
-      { Machine              = 0x14Cus
+      { Machine              = compiler.Machine
         NumberOfSections     = 3us
         TimeDateStamp        = 0
         PointerToSymbolTable = 0
@@ -104,7 +105,7 @@ dlls.["user32.dll"  ] <- [ "MessageBoxA"; "wsprintfA" ]
 let imports = new Dictionary<string, int>()
 let mutable idata = createIData idata_rva dlls imports
 
-let mutable text = I386.Compile source <| fun s ->
+let mutable text = compiler.Compile source <| fun s ->
     peh.OptionalHeader.ImageBase + imports.[s]
 let textlen = text.Length
 text <- resizeArray text (align text.Length peh.OptionalHeader.FileAlignment)
