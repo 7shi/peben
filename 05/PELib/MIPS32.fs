@@ -98,3 +98,19 @@ type Assembler(list:List<byte>, el:bool) =
 
     member x.J      ad    = opj list el 0b000010 ad
     member x.Jal    ad    = opj list el 0b000011 ad
+
+    member x.Move   t s   = x.Addi t s 0
+    member x.La     at ad = x.Lui at (ad >>> 16); x.Ori at at ad
+    member x.Li     at i  = let hi = int(uint32(i) >>> 16)
+                            if hi <> 0 then x.Lui at hi
+                            x.Ori at at i
+    member x.Beqz   s   o = x.Beq s zero o
+    member x.Bnez   s   o = x.Bne s zero o
+    member x.Bgt    s t o = x.Slt  at t s; x.Bne at zero o
+    member x.Blt    s t o = x.Slt  at s t; x.Bne at zero o
+    member x.Bge    s t o = x.Slt  at s t; x.Beq at zero o
+    member x.Ble    s t o = x.Slt  at t s; x.Beq at zero o
+    member x.Bgtu   s t o = x.Sltu at t s; x.Bne at zero o
+    member x.Bltu   s t o = x.Sltu at s t; x.Bne at zero o
+    member x.Bgeu   s t o = x.Sltu at s t; x.Beq at zero o
+    member x.Bleu   s t o = x.Sltu at t s; x.Beq at zero o
