@@ -17,7 +17,12 @@ type Compiler() =
             asm.Nop // branch delay slot
         for line in lines do
             let tokens = line.Split(' ')
-            let getarg n = 0x402030 + ((int tokens.[n].[0]) - (int 'A')) * 4
+            let getarg n =
+                let v = tokens.[n]
+                if v.Length <> 1 || v < "A" || v > "Z" then
+                    raise <| new Exception("invalid variable: " + tokens.[n])
+                else
+                    0x402030 + ((int v.[0]) - (int 'A')) * 4
             match tokens.[0] with
             | "LET" ->
                 asm.La at (getarg 1)
