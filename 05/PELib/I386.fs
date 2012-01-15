@@ -61,3 +61,6 @@ type Assembler(list:List<byte>) =
 
     member x.Ret () =
         list.Add 0xC3uy
+
+    member x.Jmp (o:sbyte) =
+        list.AddRange [ 0xebuy; (byte)o ]
