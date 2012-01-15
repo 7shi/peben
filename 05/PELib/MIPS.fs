@@ -105,6 +105,7 @@ type Assembler(list:List<byte>, el:bool) =
     member x.Li     r i   = let hi = int(uint32(i) >>> 16)
                             if hi <> 0 then x.Lui r hi; x.Ori r r i
                                        else x.Ori r zero i
+    member x.B          o = x.Beq zero zero o
     member x.Beqz   s   o = x.Beq s zero o
     member x.Bnez   s   o = x.Bne s zero o
     member x.Bgt    s t o = x.Slt  at t s; x.Bne at zero o
