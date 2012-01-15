@@ -63,4 +63,4 @@ type Assembler(list:List<byte>) =
         list.Add 0xC3uy
 
     member x.Jmp (o:sbyte) =
-        list.AddRange [ 0xebuy; (byte)o ]
+        list.AddRange [ 0xEBuy; (byte)o ]
