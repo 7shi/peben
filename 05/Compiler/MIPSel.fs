@@ -62,6 +62,6 @@ type Compiler(forCE:bool) =
             asm.Move a0 v0
             asm.Move a1 zero
             call "TerminateProcess"
-            asm.J (x.ImageBase + 0x1000 + ret.Count)
+            asm.B -1
             asm.Nop // branch delay slot
         ret.ToArray()
