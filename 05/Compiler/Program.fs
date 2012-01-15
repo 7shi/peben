@@ -12,8 +12,9 @@ let source = [
     "ADD A B"
     "DISP A" ]
 
-//let compiler = new I386.Compiler()
-let compiler = new MIPSel.Compiler()
+let forCE = true
+let compiler = new MIPSel.Compiler(forCE)
+//let compiler = new I386.Compiler(forCE)
 
 let image = Array.zeroCreate<byte> 0x200
 
@@ -61,20 +62,20 @@ let peh = {
         AddressOfEntryPoint         = 0x1000
         BaseOfCode                  = 0x1000
         BaseOfData                  = 0x2000
-        ImageBase                   = 0x400000
+        ImageBase                   = compiler.ImageBase
         SectionAlignment            = 0x1000
         FileAlignment               = 0x200
-        MajorOperatingSystemVersion = 4us
-        MinorOperatingSystemVersion = 0us
+        MajorOperatingSystemVersion = compiler.MajorVersion
+        MinorOperatingSystemVersion = compiler.MinorVersion
         MajorImageVersion           = 0us
         MinorImageVersion           = 0us
-        MajorSubsystemVersion       = 4us
-        MinorSubsystemVersion       = 0us
+        MajorSubsystemVersion       = compiler.MajorVersion
+        MinorSubsystemVersion       = compiler.MinorVersion
         Win32VersionValue           = 0
         SizeOfImage                 = 0x4000
         SizeOfHeaders               = 0x200
         CheckSum                    = 0
-        Subsystem                   = 2us
+        Subsystem                   = compiler.Subsystem
         DllCharacteristics          = 0us
         SizeOfStackReserve          = 0x100000
         SizeOfStackCommit           = 0x1000
@@ -102,8 +103,12 @@ let peh = {
 
 let idata_rva = 0x3000
 let dlls = new Dictionary<string, string list>()
-dlls.["kernel32.dll"] <- [ "ExitProcess" ]
-dlls.["user32.dll"  ] <- [ "MessageBoxW"; "wsprintfW" ]
+if not forCE then
+    dlls.["kernel32.dll"] <- [ "ExitProcess" ]
+    dlls.["user32.dll"  ] <- [ "MessageBoxW"; "wsprintfW" ]
+else
+    dlls.["coredll.dll"] <- [ "GetCurrentProcess"; "TerminateProcess"
+                              "MessageBoxW"; "wsprintfW" ]
 let imports = new Dictionary<string, int>()
 let mutable idata = createIData idata_rva dlls imports
 
