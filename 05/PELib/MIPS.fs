@@ -48,7 +48,7 @@ let inline opi (list:List<byte>) el op (s:Reg) (t:Reg) i =
                    (i &&& 0xffff))
 
 let inline opj (list:List<byte>) el op ad =
-    add32 list el ((op <<< 26) ||| (ad &&& 0x03ffffff))
+    add32 list el ((op <<< 26) ||| ((ad >>> 2) &&& 0x03ffffff))
 
 type Assembler(list:List<byte>, el:bool) =
     member x.Nop          = list.AddRange [ 0uy; 0uy; 0uy; 0uy ]
