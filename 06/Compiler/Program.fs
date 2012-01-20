@@ -112,8 +112,7 @@ else
 let imports = new Dictionary<string, int>()
 let mutable idata = createIData idata_rva dlls imports
 
-let mutable text = compiler.Compile source <| fun s ->
-    peh.OptionalHeader.ImageBase + imports.[s]
+let mutable text = compiler.Compile source imports
 let textlen = text.Length
 text <- resizeArray text (align text.Length peh.OptionalHeader.FileAlignment)
 

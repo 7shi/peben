@@ -11,9 +11,10 @@ type Compiler(forCE:bool) =
     member x.MajorVersion = if forCE then  2us else 4us
     member x.MinorVersion = if forCE then 11us else 0us
 
-    member x.Compile (lines:string list) (getaddr:string -> int) =
+    member x.Compile (lines:string list) (imports:Dictionary<string, int>) =
         let ret = new List<byte>()
         let asm = new Assembler(ret)
+        let getaddr name = x.ImageBase + imports.[name]
         for line in lines do
             let tokens = line.Split(' ')
             let getarg n =

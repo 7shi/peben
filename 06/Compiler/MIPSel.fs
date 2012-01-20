@@ -11,11 +11,11 @@ type Compiler(forCE:bool) =
     member x.MajorVersion = if forCE then  2us else 4us
     member x.MinorVersion = if forCE then 11us else 0us
 
-    member x.Compile (lines:string list) (getaddr:string -> int) =
+    member x.Compile (lines:string list) (imports:Dictionary<string, int>) =
         let ret = new List<byte>()
         let asm = new Assembler(ret, true)
         let call name =
-            asm.La at (getaddr name)
+            asm.La at (x.ImageBase + imports.[name])
             asm.Lw at 0(at)
             asm.Nop // load delay slot
             asm.Jalr ra at
