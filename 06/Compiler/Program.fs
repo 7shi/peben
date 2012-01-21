@@ -13,7 +13,8 @@ let source = [
     "DISP A" ]
 
 let forCE = true
-let compiler = new MIPSel.Compiler(forCE)
+let compiler = new ARM.Compiler()
+//let compiler = new MIPSel.Compiler(forCE)
 //let compiler = new I386.Compiler(forCE)
 
 let image = Array.zeroCreate<byte> 0x200

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="I386.fs" />
     <Compile Include="MIPSel.fs" />
+    <Compile Include="ARM.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
