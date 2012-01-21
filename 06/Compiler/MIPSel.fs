@@ -58,8 +58,7 @@ type Compiler(forCE:bool) =
             asm.Li a0 0
             call "ExitProcess"
         else
-            call "GetCurrentProcess"
-            asm.Move a0 v0
+            asm.Li a0 66 // CurrentProcess
             asm.Move a1 zero
             call "TerminateProcess"
             asm.B -1

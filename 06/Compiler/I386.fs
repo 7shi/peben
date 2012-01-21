@@ -49,9 +49,8 @@ type Compiler(forCE:bool) =
             asm.Push 0
             asm.Call [getaddr "ExitProcess"]
         else
-            asm.Call [getaddr "GetCurrentProcess"]
             asm.Push 0
-            asm.Push eax
+            asm.Push 66 // CurrentProcess
             asm.Call [getaddr "TerminateProcess"]
             asm.Jmp -2y
         ret.ToArray()

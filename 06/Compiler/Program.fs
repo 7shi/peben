@@ -107,7 +107,7 @@ if not forCE then
     dlls.["kernel32.dll"] <- [ "ExitProcess" ]
     dlls.["user32.dll"  ] <- [ "MessageBoxW"; "wsprintfW" ]
 else
-    dlls.["coredll.dll"] <- [ "GetCurrentProcess"; "TerminateProcess"
+    dlls.["coredll.dll"] <- [ "TerminateProcess";
                               "MessageBoxW"; "wsprintfW" ]
 let imports = new Dictionary<string, int>()
 let mutable idata = createIData idata_rva dlls imports
